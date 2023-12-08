@@ -41,7 +41,7 @@ namespace GeoWalle
             MiCanvas.Children.Add(circunferencia);
         }
 
-        private void OnButtonClicked(object sender, RoutedEventArgs e)
+        private void DrawButtonClicked(object sender, RoutedEventArgs e)
         {
             Output.Text = "";
             string s = Input.Text;
@@ -66,6 +66,11 @@ namespace GeoWalle
                 Output.Text = exception.Message +"\nPara mas info visite: "+exception.HelpLink;
             }
             
+        }
+
+        private void CleanCanvas(object sender, RoutedEventArgs e)
+        {
+            MiCanvas.Children.Clear();
         }
     }
 }

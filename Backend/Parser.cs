@@ -49,52 +49,31 @@ public class Parser
                 tokens.MoveNext();
                 return ParseDraw(context);
             default:
-                return RandomObjectDecl(context);
+                return ParseAndOr(context);
         }
     }
 
     private MyExpression ParseDraw(Context context)
     {
+        Draw d;
+        
         MyExpression objToDraw = ParseExpression(context);
-        string label = "";
-        if (tokens.Current.Type == Token.TokenType.Text)
+        if (objToDraw is Sequence seq)
         {
-            label = tokens.Current.Value;
-            tokens.MoveNext();
-        }
-        Draw d = new Draw(objToDraw, label);
-        return d;
-    }
+            d = new Draw(seq);
+        }else
+        {
+            string label = "";
+            if (tokens.Current.Type == Token.TokenType.Text)
+            {
+                label = tokens.Current.Value;
+                tokens.MoveNext();
+            }
 
-    private MyExpression RandomObjectDecl(Context context)
-    {
-        /*switch (tokens.Current.Type)
-        {
-            case Token.TokenType.PointDecl:
-                tokens.MoveNext();
-                if (tokens.Current.Type != Token.TokenType.ID)
-                    throw new SyntaxException("VarName expected in let-in expression");
-                context.AddVar(new Variable(tokens.Current.Value, new GPoint()));
-                tokens.MoveNext();
-                return null!;
-            case Token.TokenType.CircleDecl:
-                tokens.MoveNext();
-                if (tokens.Current.Type != Token.TokenType.ID)
-                    throw new SyntaxException("VarName expected in let-in expression");
-                GPoint center = new GPoint();
-                Measure measure = new Measure(new List<MyExpression>{center, new GPoint()});
-                context.AddVar(
-                    new Variable(
-                        tokens.Current.Value,
-                        new GCircle(
-                                new List<MyExpression>{new GPoint(), measure}
-                            )
-                        )
-                    );
-                tokens.MoveNext();
-                return null!;
-        }*/
-        return ParseAndOr(context);
+            d = new Draw(objToDraw, label);
+        }
+        
+        return d;
     }
 
     private void ObjectDecl(Context context)
@@ -303,6 +282,8 @@ public class Parser
                 MyExpression m = ParseExpression(context);
                 tokens.MoveNext();
                 return m;
+            case Token.TokenType.OpenLlaves:
+                return ParseSequence(context);
             case Token.TokenType.Resta:
                 tokens.MoveNext();
                 return new NegativeNumber(ParseTerm(context));
@@ -314,6 +295,11 @@ public class Parser
 
         return CheckIsVarFun(context);
         
+    }
+
+    private MyExpression ParseSequence(Context context)
+    {
+        return new Sequence(GetParams(context, Token.TokenType.ClosedLLaves));
     }
 
     private MyExpression ParseCircle(Context context)
@@ -411,14 +397,14 @@ public class Parser
         UserFunction.AddFunction(new UserFunction(funName, funParams, funBody));
 
     }
-    private List<MyExpression> GetParams(Context context)
+    private List<MyExpression> GetParams(Context context, Token.TokenType tokenTypeClose = Token.TokenType.CloseParenthesis)
     {
         List<MyExpression> paramExpressions = new List<MyExpression>();
         tokens.MoveNext();
-        while (tokens.Current.Type != Token.TokenType.CloseParenthesis)
+        while (tokens.Current.Type != tokenTypeClose)
         {
             paramExpressions.Add(ParseExpression(context));
-            if (tokens.Current.Type == Token.TokenType.CloseParenthesis)
+            if (tokens.Current.Type == tokenTypeClose)
                 break;
             if(tokens.Current.Type != Token.TokenType.Comma)
                 throw new SyntaxException("Expected ',' between parameters");

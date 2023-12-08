@@ -14,9 +14,9 @@ public class GCircle : PredFunction, IGraphicObject
     public GCircle(List<MyExpression> args) : base("circle",args )
     {
         GPoint center = (GPoint) args[0];
+        radio = double.Parse(args[1].Evaluate());
         PosX = center.PosX - radio;
         PosY = center.PosY - radio;
-        radio = double.Parse(args[1].Evaluate());
 
     }
 
