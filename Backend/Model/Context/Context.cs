@@ -14,21 +14,12 @@ public class Context
         new Variable("PI", new Number(double.Pi.ToString())),
         new Variable("E", new Number(Math.E.ToString()))
     };
-    private readonly List<GObjVar> myGObjects = new();
-
     public void AddVar(Variable v)
     {
-        if (FindVar(v.Name) == null && FindGObject(v.Name) == null)
+        if (FindVar(v.Name) == null)
             myVars.Add(v);
         else
             throw new SyntaxException("La variable "+v.Name+" ya existe en el contexto actual.");
-    }
-    public void AddGObject(GObjVar o)
-    {
-        if (FindVar(o.Name) == null && FindGObject(o.Name) == null)
-            myGObjects.Add(o);
-        else
-            throw new SyntaxException("La variable "+o.Name+" ya existe en el contexto actual.");
     }
 
     public Variable? FindVar(string varName)
@@ -36,12 +27,6 @@ public class Context
         return myVars.Find(x => x.Name == varName);
 
     }
-    public GObjVar? FindGObject(string objName)
-    {
-        return myGObjects.Find(x => x.Name == objName);
-
-    }
-
     public Context Clone()
     {
         Context c = new Context();

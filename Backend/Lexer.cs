@@ -211,6 +211,8 @@ internal static class Lexer{
                 return Token.TokenType.PointDecl;
             case "circle":
                 return Token.TokenType.CircleDecl;
+            case "measure":
+                return Token.TokenType.MeasureDecl;
             case "line":
                 return Token.TokenType.LineDecl;
             case "segment":

@@ -58,7 +58,8 @@ public class Token{
         Underscore,
         PointsFigure,
         SampleCanvas,
-        RandomsValuesN
+        RandomsValuesN,
+        MeasureDecl
     }
 
     public string Value{get;}

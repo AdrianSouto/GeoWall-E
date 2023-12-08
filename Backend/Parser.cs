@@ -30,53 +30,83 @@ public class Parser
     }
     private MyExpression ParseExpression(Context context)
     {
-        MyExpression e;
-        if (tokens.Current.Type == Token.TokenType.FunDeclarationKeyWord)
+        switch (tokens.Current.Type)
         {
-            tokens.MoveNext();
-            ParseFunDeclaration();
-            return null!;
+            case Token.TokenType.FunDeclarationKeyWord:
+                tokens.MoveNext();
+                ParseFunDeclaration();
+                return null!;
+            case Token.TokenType.VarDeclarationKeyWord:
+                tokens.MoveNext();
+                return ParseVarDeclaration(context);
+            case Token.TokenType.If:
+                tokens.MoveNext();
+                return ParseIfDeclaration(context);
+            /*case Token.TokenType.ID:
+                ObjectDecl(context);
+                return null!;*/
+            case Token.TokenType.Draw:
+                tokens.MoveNext();
+                return ParseDraw(context);
+            default:
+                return RandomObjectDecl(context);
         }
-        if (tokens.Current.Type == Token.TokenType.VarDeclarationKeyWord)
-        {
-            tokens.MoveNext();
-            e = ParseVarDeclaration(context);
-        }else
-
-        if (tokens.Current.Type == Token.TokenType.If)
-        {
-            tokens.MoveNext();
-            e = ParseIfDeclaration(context);
-        }else /*if (tokens.Current.Type == Token.TokenType.ID)
-        {
-            RandomObjectDecl(context);
-        }*/
-        e = ParseAndOr(context);
-        
-        //if(current<tokens.Count-1) 
-        //throw new SyntaxException("Invalid Expression '"+tokens.Current.value+"' is not a valid operator");
-        //tokens.MoveNext();
-        return e;
     }
 
-    /*private void RandomObjectDecl(Context context)
+    private MyExpression ParseDraw(Context context)
+    {
+        MyExpression objToDraw = ParseExpression(context);
+        string label = "";
+        if (tokens.Current.Type == Token.TokenType.Text)
+        {
+            label = tokens.Current.Value;
+            tokens.MoveNext();
+        }
+        Draw d = new Draw(objToDraw, label);
+        return d;
+    }
+
+    private MyExpression RandomObjectDecl(Context context)
+    {
+        /*switch (tokens.Current.Type)
+        {
+            case Token.TokenType.PointDecl:
+                tokens.MoveNext();
+                if (tokens.Current.Type != Token.TokenType.ID)
+                    throw new SyntaxException("VarName expected in let-in expression");
+                context.AddVar(new Variable(tokens.Current.Value, new GPoint()));
+                tokens.MoveNext();
+                return null!;
+            case Token.TokenType.CircleDecl:
+                tokens.MoveNext();
+                if (tokens.Current.Type != Token.TokenType.ID)
+                    throw new SyntaxException("VarName expected in let-in expression");
+                GPoint center = new GPoint();
+                Measure measure = new Measure(new List<MyExpression>{center, new GPoint()});
+                context.AddVar(
+                    new Variable(
+                        tokens.Current.Value,
+                        new GCircle(
+                                new List<MyExpression>{new GPoint(), measure}
+                            )
+                        )
+                    );
+                tokens.MoveNext();
+                return null!;
+        }*/
+        return ParseAndOr(context);
+    }
+
+    private void ObjectDecl(Context context)
     {
         string name = tokens.Current.Value;
         tokens.MoveNext();
         if(tokens.Current.Type != Token.TokenType.Igual)
             throw new SyntaxException("'=' expected in let-in expression");
         tokens.MoveNext();
-        IGraphicObject GType;
-        switch (tokens.Current.Type)
-        {
-            case Token.TokenType.PointDecl:
-                GType = new GPoint();
-                break;
-            case Token.TokenType.CircleDecl :
-                GType = new GCircle()
-        }
-
-    }*/
+        MyExpression value = ParseExpression(context);
+        context.AddVar(new Variable(name, value));
+    }
 
     private MyExpression ParseAndOr(Context context)
     {
@@ -249,6 +279,25 @@ public class Parser
             case Token.TokenType.Print:
                 tokens.MoveNext();
                 return new Print(GetParams(context));
+            case Token.TokenType.MeasureDecl:
+                tokens.MoveNext();
+                return new Measure(GetParams(context));
+            case Token.TokenType.CircleDecl:
+                tokens.MoveNext();
+                return ParseCircle(context);
+            case Token.TokenType.PointDecl:
+                tokens.MoveNext();
+                if (tokens.Current.Type != Token.TokenType.ID)
+                    throw new SyntaxException("VarName expected in let-in expression");
+                context.AddVar(new Variable(tokens.Current.Value, new GPoint()));
+                tokens.MoveNext();
+                return null!;
+            case Token.TokenType.SegmentDecl:
+                tokens.MoveNext();
+                return new GSegment(GetParams(context));
+            case Token.TokenType.LineDecl:
+                tokens.MoveNext();
+                return new GLine(GetParams(context));
             case Token.TokenType.OpenParenthesis:
                 tokens.MoveNext();
                 MyExpression m = ParseExpression(context);
@@ -267,13 +316,35 @@ public class Parser
         
     }
 
+    private MyExpression ParseCircle(Context context)
+    {
+        if (tokens.Current.Type == Token.TokenType.OpenParenthesis)
+        {
+            return new GCircle(GetParams(context));
+        }
+        if (tokens.Current.Type != Token.TokenType.ID)
+            throw new SyntaxException("VarName expected on Circle declaration");
+        GPoint center = new GPoint();
+        Measure measure = new Measure(new List<MyExpression>{center, new GPoint()});
+        context.AddVar(
+            new Variable(
+                tokens.Current.Value,
+                new GCircle(
+                    new List<MyExpression>{new GPoint(), measure}
+                )
+            )
+        );
+        tokens.MoveNext();
+        return null!;
+    }
+
     private MyExpression CheckIsVarFun(Context context)
     {
         Variable? v = context.FindVar(tokens.Current.Value);
         if (v != null)
         {
             tokens.MoveNext();
-            return new Number(v.Value);
+            return v.VarTree;
         }
         
         UserFunction? f = UserFunction.FindFunction(tokens.Current.Value);
@@ -298,6 +369,12 @@ public class Parser
             tokens.MoveNext();
             tokens = t;
             return result;
+        }
+        
+        if(tokens.Current.Type == Token.TokenType.ID)
+        {
+            ObjectDecl(context);
+            return null!;
         }
         throw new SyntaxException("Invalid Expression '"+tokens.Current.Value+"'");
     }

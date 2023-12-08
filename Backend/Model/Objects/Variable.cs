@@ -5,7 +5,7 @@ namespace GeoWalle.Backend.Model.Objects;
 public class Variable
 {
     public string Name;
-    private MyExpression VarTree { get; }
+    public MyExpression VarTree { get; }
 
     private string _value = "";
 

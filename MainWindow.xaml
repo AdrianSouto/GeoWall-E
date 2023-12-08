@@ -7,6 +7,31 @@
         Title="MainWindow" Height="450" Width="800">
         
         <Grid>
+                <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="4*"/>
+                        <ColumnDefinition Width="6*"/>
+                </Grid.ColumnDefinitions>
+                <Grid Grid.Column="0">
+                        <Grid.RowDefinitions>
+                                <RowDefinition Height="8*"/>
+                                <RowDefinition Height="2*"/>
+                        </Grid.RowDefinitions>
+                        <TextBox Grid.Row="0" x:Name="Input" Margin="0,0,0,10" AcceptsTab="True" AcceptsReturn="True"/>
+                        <Button Grid.Row="1" Click="OnButtonClicked">Draw</Button>
+                </Grid>
+                <Grid Grid.Column="1">
+                        <Grid.RowDefinitions>
+                                <RowDefinition Height="8*"/>
+                                <RowDefinition Height="2*"/>
+                        </Grid.RowDefinitions>
+                        <Border ClipToBounds="True" Margin="0,0,0,10">
+                                <Canvas x:Name="MiCanvas"  Background="LightGray"  />
+                        </Border>
+                        <TextBlock Grid.Row="1" x:Name="Output"/>
+                </Grid>
+                <!--<Grid.RowDefinitions>
+                        <RowDefinition Height="*"></RowDefinition>
+                </Grid.RowDefinitions>
                 <StackPanel Orientation="Horizontal" Width="800" Height="450">
                         <StackPanel HorizontalAlignment="Left" Width="300" Margin="10" Height="450">
                                 <TextBox x:Name="Input" Height="350" Margin="0,0,0,10" MaxLines="100" AcceptsTab="True" AcceptsReturn="True"/>
@@ -17,7 +42,7 @@
                                 <TextBlock Width="450" Height="90" x:Name="Output"/>
                         </StackPanel>   
                         
-                </StackPanel>
+                </StackPanel>-->
                 
         </Grid>
         

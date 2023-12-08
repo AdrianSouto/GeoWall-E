@@ -15,7 +15,5 @@ public abstract class PredFunction : MyExpression
         this.value = value;
         Args = args;
     }
-    public abstract override string Evaluate();
-
     public override string value { get; }
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
@@ -9,6 +10,7 @@ using System.Windows.Shapes;
 using GeoWalle.Backend;
 using GeoWalle.Backend.Model.Context;
 using GeoWalle.Backend.Model.Expressions;
+using GeoWalle.Backend.Model.GraphicObjects;
 using GeoWalle.Backend.Model.MyExceptions;
 using GeoWalle.Backend.Model.Objects;
 
@@ -25,28 +27,26 @@ namespace GeoWalle
             //DrawPoint();
         }
 
-        /*private void DrawPoint()
+        private void DrawPoint()
         {
-            Random random = new Random();
-            double x = random.NextDouble() * MiCanvas.ActualWidth;
-            double y = random.NextDouble() * MiCanvas.ActualHeight;
-            
-            Ellipse punto = new Ellipse
+            Ellipse circunferencia = new Ellipse
             {
-                Width = 5,
-                Height = 5,
-                Fill = Brushes.Black
+                Width = 65,
+                Height = 65,
+                Stroke = Brushes.Black,
+                StrokeThickness = 2
             };
-            Canvas.SetLeft(punto, x);
-            Canvas.SetLeft(punto, y);
-            MiCanvas.Children.Add(punto);
-        }*/
+            Canvas.SetLeft(circunferencia, 428);
+            Canvas.SetTop(circunferencia, 133);
+            MiCanvas.Children.Add(circunferencia);
+        }
 
         private void OnButtonClicked(object sender, RoutedEventArgs e)
         {
             Output.Text = "";
             string s = Input.Text;
             if (!Utils.IsBalanced(s)) throw new SyntaxException("Input no balanceado");
+            Draw.canvas = MiCanvas;
             IEnumerable<Token> tokens = Lexer.GetTokens(s);
             Parser p = new Parser(tokens.GetEnumerator());
             try
@@ -60,7 +60,7 @@ namespace GeoWalle
                     }
                 }
             }
-            catch (Exception exception)
+            catch (MyException exception)
             {
                 
                 Output.Text = exception.Message +"\nPara mas info visite: "+exception.HelpLink;
