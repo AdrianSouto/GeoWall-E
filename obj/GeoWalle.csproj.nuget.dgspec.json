@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "D:\\Trabajo\\Universidad\\MIO\\2do Semestre\\Proyectos\\GeoWalle\\GeoWalle\\GeoWalle.csproj": {}
+    "d:\\Trabajo\\Universidad\\MIO\\2do Semestre\\Proyectos\\GeoWalle\\GeoWalle\\GeoWalle.csproj": {}
   },
   "projects": {
-    "D:\\Trabajo\\Universidad\\MIO\\2do Semestre\\Proyectos\\GeoWalle\\GeoWalle\\GeoWalle.csproj": {
+    "d:\\Trabajo\\Universidad\\MIO\\2do Semestre\\Proyectos\\GeoWalle\\GeoWalle\\GeoWalle.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\Trabajo\\Universidad\\MIO\\2do Semestre\\Proyectos\\GeoWalle\\GeoWalle\\GeoWalle.csproj",
+        "projectUniqueName": "d:\\Trabajo\\Universidad\\MIO\\2do Semestre\\Proyectos\\GeoWalle\\GeoWalle\\GeoWalle.csproj",
         "projectName": "GeoWalle",
-        "projectPath": "D:\\Trabajo\\Universidad\\MIO\\2do Semestre\\Proyectos\\GeoWalle\\GeoWalle\\GeoWalle.csproj",
+        "projectPath": "d:\\Trabajo\\Universidad\\MIO\\2do Semestre\\Proyectos\\GeoWalle\\GeoWalle\\GeoWalle.csproj",
         "packagesPath": "C:\\Users\\Adrian\\.nuget\\packages\\",
-        "outputPath": "D:\\Trabajo\\Universidad\\MIO\\2do Semestre\\Proyectos\\GeoWalle\\GeoWalle\\obj\\",
+        "outputPath": "d:\\Trabajo\\Universidad\\MIO\\2do Semestre\\Proyectos\\GeoWalle\\GeoWalle\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\Adrian\\AppData\\Roaming\\NuGet\\NuGet.Config"

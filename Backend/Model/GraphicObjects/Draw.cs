@@ -8,10 +8,10 @@ namespace GeoWalle.Backend.Model.GraphicObjects;
 
 public class Draw : MyExpression
 {
-    private IGraphicObject gobject;
+    private IGraphicObject? gobject;
     public static Canvas canvas;
-    private string label;
-    private Sequence listGObjects;
+    private string? label;
+    private Sequence? listGObjects;
 
     public Draw(MyExpression gobject, string label = "")
     {
@@ -27,7 +27,7 @@ public class Draw : MyExpression
     {
         if (listGObjects == null)
         {
-            gobject.Draw(canvas, Brushes.Black);
+            gobject?.Draw(canvas, Brushes.Black);
             DrawLabel();        
         }
         else

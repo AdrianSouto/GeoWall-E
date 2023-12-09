@@ -277,6 +277,9 @@ public class Parser
             case Token.TokenType.LineDecl:
                 tokens.MoveNext();
                 return new GLine(GetParams(context));
+            case Token.TokenType.Intersect:
+                tokens.MoveNext();
+                return new Intersect(GetParams(context));
             case Token.TokenType.OpenParenthesis:
                 tokens.MoveNext();
                 MyExpression m = ParseExpression(context);

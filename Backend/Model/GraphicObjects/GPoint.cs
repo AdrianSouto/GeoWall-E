@@ -1,4 +1,5 @@
 using System;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Shapes;
@@ -13,23 +14,22 @@ public class GPoint : MyExpression, IGraphicObject
         Random random = new Random();
         PosX = random.NextDouble() * GraphicObjects.Draw.canvas.ActualWidth;
         PosY = random.NextDouble() * GraphicObjects.Draw.canvas.ActualHeight;
+        MyGeometry = new EllipseGeometry(new Point(PosX, PosY), 5, 5);
     }
 
 
     public double PosX { get; }
     public double PosY { get; }
+    public Geometry MyGeometry { get; }
 
     public void Draw(Canvas canvas, SolidColorBrush color)
     {
-        Ellipse punto = new Ellipse
+        Path point = new Path
         {
-            Width = 5,
-            Height = 5,
-            Fill = color
+            Data = MyGeometry,
+            Fill = color,
         };
-        Canvas.SetLeft(punto, PosX);
-        Canvas.SetTop(punto, PosY);
-        canvas.Children.Add(punto);
+        canvas.Children.Add(point);
     }
 
     public override string Evaluate()

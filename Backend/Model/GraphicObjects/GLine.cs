@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Shapes;
@@ -18,11 +19,13 @@ public class GLine : PredFunction, IGraphicObject
         p2 = (GPoint) args[1];
         PosX = (p2.PosX + p1.PosX)/2;
         PosY = (p2.PosY + p1.PosY)/2;
+        MyGeometry = new LineGeometry(new Point(p1.PosX, p1.PosY), new Point(p2.PosX, p2.PosY));
 
     }
 
     public double PosX { get; }
     public double PosY { get; }
+    public Geometry MyGeometry { get; }
 
     public void Draw(Canvas canvas, SolidColorBrush color)
     {
@@ -32,12 +35,9 @@ public class GLine : PredFunction, IGraphicObject
         double y1 = m * x1 + n;
         double x2 = -1000;
         double y2 = m * x2 + n;
-        Line line = new Line
+        Path line = new Path
         {
-            X1 = x1,
-            Y1 = y1,
-            X2 = x2,
-            Y2 = y2,
+            Data = MyGeometry,
             Stroke = color,
             StrokeThickness = 2,
             
