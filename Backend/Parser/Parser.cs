@@ -79,13 +79,32 @@ public class Parser
 
     private void ObjectDecl(Context context)
     {
-        string name = tokens.Current.Value;
-        tokens.MoveNext();
-        if(tokens.Current.Type != Token.TokenType.Igual)
-            throw new SyntaxException("'=' expected in let-in expression");
-        tokens.MoveNext();
-        MyExpression value = ParseExpression(context);
-        context.AddVar(new Variable(name, value));
+            List<string> vars = GetFunDeclParams(Token.TokenType.Igual);
+            tokens.MoveNext();
+            MyExpression value = ParseExpression(context);
+            if (vars.Count == 1)
+            {
+                context.AddVar(new Variable(vars[0], value));
+                return;
+            }
+            var sequence = value as Sequence;
+            sequence?.MoveNext();
+            for (int i = 0; i < vars.Count; i++)
+            {
+                if (context.FindVar(vars[i]) == null && vars[i] != "_"&& i < vars.Count - 1)
+                {
+                    context.AddVar(new Variable(vars[i], sequence!.Current));
+                }
+                if (i >= vars.Count - 2 )
+                {
+                    if (vars[i+1]!="_")
+                    {
+                        context.AddVar(new Variable(vars[i+1], value));
+                    }
+                    break;
+                }
+                sequence!.MoveNext();
+            }
     }
 
     private MyExpression ParseAndOr(Context context)
@@ -240,26 +259,50 @@ public class Parser
                 return new Bool(current.Value);
             case Token.TokenType.Sin:
                 tokens.MoveNext();
+                if (tokens.Current.Type != Token.TokenType.OpenParenthesis)
+                    throw new SyntaxException("Missing Open Parenthesis in Sin declaration");
+                tokens.MoveNext();
                 return new Sin(GetParams(context));
             case Token.TokenType.Cos:
+                tokens.MoveNext();
+                if (tokens.Current.Type != Token.TokenType.OpenParenthesis)
+                    throw new SyntaxException("Missing Open Parenthesis in Cos declaration");
                 tokens.MoveNext();
                 return new Cos(GetParams(context));
             case Token.TokenType.Tan:
                 tokens.MoveNext();
+                if (tokens.Current.Type != Token.TokenType.OpenParenthesis)
+                    throw new SyntaxException("Missing Open Parenthesis in Tan declaration");
+                tokens.MoveNext();
                 return new Tan(GetParams(context));
             case Token.TokenType.Cot:
+                tokens.MoveNext();
+                if (tokens.Current.Type != Token.TokenType.OpenParenthesis)
+                    throw new SyntaxException("Missing Open Parenthesis in Cot declaration");
                 tokens.MoveNext();
                 return new Cot(GetParams(context));
             case Token.TokenType.Log:
                 tokens.MoveNext();
+                if (tokens.Current.Type != Token.TokenType.OpenParenthesis)
+                    throw new SyntaxException("Missing Open Parenthesis in Log declaration");
+                tokens.MoveNext();
                 return new Log(GetParams(context));
             case Token.TokenType.Sqrt:
+                tokens.MoveNext();
+                if (tokens.Current.Type != Token.TokenType.OpenParenthesis)
+                    throw new SyntaxException("Missing Open Parenthesis in Sqrt declaration");
                 tokens.MoveNext();
                 return new Sqrt(GetParams(context));
             case Token.TokenType.Print:
                 tokens.MoveNext();
+                if (tokens.Current.Type != Token.TokenType.OpenParenthesis)
+                    throw new SyntaxException("Missing Open Parenthesis in Print declaration");
+                tokens.MoveNext();
                 return new Print(GetParams(context));
             case Token.TokenType.MeasureDecl:
+                tokens.MoveNext();
+                if (tokens.Current.Type != Token.TokenType.OpenParenthesis)
+                    throw new SyntaxException("Missing Open Parenthesis in measure declaration");
                 tokens.MoveNext();
                 return new Measure(GetParams(context));
             case Token.TokenType.CircleDecl:
@@ -274,11 +317,20 @@ public class Parser
                 return null!;
             case Token.TokenType.SegmentDecl:
                 tokens.MoveNext();
+                if (tokens.Current.Type != Token.TokenType.OpenParenthesis)
+                    throw new SyntaxException("Missing Open Parenthesis in segment declaration");
+                tokens.MoveNext();
                 return new GSegment(GetParams(context));
             case Token.TokenType.LineDecl:
                 tokens.MoveNext();
+                if (tokens.Current.Type != Token.TokenType.OpenParenthesis)
+                    throw new SyntaxException("Missing Open Parenthesis in line declaration");
+                tokens.MoveNext();
                 return new GLine(GetParams(context));
             case Token.TokenType.Intersect:
+                tokens.MoveNext();
+                if (tokens.Current.Type != Token.TokenType.OpenParenthesis)
+                    throw new SyntaxException("Missing Open Parenthesis in intersect declaration");
                 tokens.MoveNext();
                 return new Intersect(GetParams(context));
             case Token.TokenType.Color:
@@ -312,9 +364,9 @@ public class Parser
 
     private MyExpression ParseSequence(Context context)
     {
-        var t = tokens;
         int start;
         tokens.MoveNext();
+        List<MyExpression> parametros = new ();
         if (int.TryParse(tokens.Current.Value, out start))
         {
             tokens.MoveNext();
@@ -332,16 +384,21 @@ public class Parser
                 tokens.MoveNext();
                 return new Sequence(start);
             }
+            parametros.Add(new Number(start.ToString()));
         }
-
-        tokens = t;
-        return new Sequence(GetParams(context, Token.TokenType.ClosedLLaves));
+        
+        foreach (var x in GetParams(context, Token.TokenType.ClosedLLaves))
+        {
+            parametros.Add(x);
+        }
+        return new Sequence(parametros);
     }
 
     private MyExpression ParseCircle(Context context)
     {
         if (tokens.Current.Type == Token.TokenType.OpenParenthesis)
         {
+            tokens.MoveNext();
             return new GCircle(GetParams(context));
         }
         if (tokens.Current.Type != Token.TokenType.ID)
@@ -373,6 +430,9 @@ public class Parser
         if (f != null)
         {
             Context c = new Context();
+            tokens.MoveNext();
+            if (tokens.Current.Type != Token.TokenType.OpenParenthesis)
+                throw new SyntaxException("Missing Open Parenthesis in fun declaration");
             tokens.MoveNext();
             List<MyExpression> list = GetParams(context);
             for (int i = 0; i < list.Count; i++)
@@ -414,6 +474,7 @@ public class Parser
         tokens.MoveNext();
         if (tokens.Current.Type == Token.TokenType.OpenParenthesis)
         {
+            tokens.MoveNext();
             funParams = GetFunDeclParams();
         }
         else
@@ -436,7 +497,7 @@ public class Parser
     private List<MyExpression> GetParams(Context context, Token.TokenType tokenTypeClose = Token.TokenType.CloseParenthesis)
     {
         List<MyExpression> paramExpressions = new List<MyExpression>();
-        tokens.MoveNext();
+        //tokens.MoveNext();
         while (tokens.Current.Type != tokenTypeClose)
         {
             paramExpressions.Add(ParseExpression(context));
@@ -452,19 +513,20 @@ public class Parser
         tokens.MoveNext();
         return paramExpressions;
     }
-    private List<string> GetFunDeclParams()
+    private List<string> GetFunDeclParams(Token.TokenType tokenTypeClose = Token.TokenType.CloseParenthesis)
     {
         List<string> varNames = new List<string>();
-        while (tokens.Current.Type != Token.TokenType.CloseParenthesis)
+        while (tokens.Current.Type != tokenTypeClose)
         {
-            tokens.MoveNext();
             if (tokens.Current.Type != Token.TokenType.ID)
                 throw new SyntaxException(tokens.Current.Value + " is not a valid VarName");
             varNames.Add(tokens.Current.Value);
             tokens.MoveNext();
+            if(tokens.Current.Type == tokenTypeClose) break;
             if (tokens.Current.Type != Token.TokenType.Comma &&
-                tokens.Current.Type != Token.TokenType.CloseParenthesis)
+                tokens.Current.Type != tokenTypeClose)
                 throw new SyntaxException("Missing Comma Function Params");
+            tokens.MoveNext();
         }
 
         return varNames;

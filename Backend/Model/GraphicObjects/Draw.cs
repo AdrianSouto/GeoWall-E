@@ -1,7 +1,8 @@
-using System.Collections.Generic;
+using System;
 using System.Windows.Controls;
 using System.Windows.Media;
 using GeoWalle.Backend.Model.Expressions;
+using GeoWalle.Backend.Model.MyExceptions;
 using GeoWalle.Backend.Model.Objects;
 using Color = GeoWalle.Backend.Model.Objects.Color;
 
@@ -35,7 +36,14 @@ public class Draw : MyExpression
         {
             while (listGObjects.MoveNext())
             {
-                ((IGraphicObject)listGObjects.Current).Draw(canvas, Color.GetColor());
+                try
+                {
+                    ((IGraphicObject)listGObjects.Current).Draw(canvas, Color.GetColor());
+                }
+                catch (InvalidCastException e)
+                {
+                    throw new SemanticException(listGObjects.Current.value + " no se puede dibujar");
+                }
             }
             
         }

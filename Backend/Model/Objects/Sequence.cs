@@ -61,14 +61,13 @@ public class Sequence : MyExpression, IEnumerator<MyExpression>
 
     public override string Evaluate()
     {
-       /* string s = "";
+        string s = "";
         while (MoveNext())
         {
             s += Current.Evaluate();
         }
 
-        return s;*/
-       return "";
+        return s;
     }
 
     public override string value => "sequence";

@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using GeoWalle.Backend.Model.GraphicObjects;
 using GeoWalle.Backend.Model.MyExceptions;
 using GeoWalle.Backend.Model.Objects;
 using Hulk.Model;

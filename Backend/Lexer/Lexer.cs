@@ -243,8 +243,6 @@ internal static class Lexer{
                 return Token.TokenType.Restore;
             case "intersect":
                 return Token.TokenType.Intersect;
-            case "_":
-                return Token.TokenType.Underscore;
             case "points":
                 return Token.TokenType.PointsFigure;
             case "samples":
