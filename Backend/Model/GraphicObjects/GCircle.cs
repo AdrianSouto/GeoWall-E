@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Shapes;
@@ -15,25 +16,23 @@ public class GCircle : PredFunction, IGraphicObject
     {
         GPoint center = (GPoint) args[0];
         radio = double.Parse(args[1].Evaluate());
-        PosX = center.PosX - radio;
-        PosY = center.PosY - radio;
-
+        PosX = center.PosX;
+        PosY = center.PosY;
+        MyGeometry = new EllipseGeometry(new Point(PosX,PosY), radio, radio);
     }
 
     public double PosX { get; }
     public double PosY { get; }
+    public Geometry MyGeometry { get; }
 
     public void Draw(Canvas canvas, SolidColorBrush color)
     {
-        Ellipse circunferencia = new Ellipse
+        Path circunferencia = new Path
         {
-            Width = radio*2,
-            Height = radio*2,
+            Data = MyGeometry,
             Stroke = color,
             StrokeThickness = 2
         };
-        Canvas.SetLeft(circunferencia, PosX);
-        Canvas.SetTop(circunferencia, PosY);
         canvas.Children.Add(circunferencia);
     }
 
