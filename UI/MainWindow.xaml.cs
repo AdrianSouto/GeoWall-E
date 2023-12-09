@@ -24,23 +24,7 @@ namespace GeoWalle
         public MainWindow()
         {
             InitializeComponent();
-            //DrawPoint();
         }
-
-        private void DrawPoint()
-        {
-            Ellipse circunferencia = new Ellipse
-            {
-                Width = 65,
-                Height = 65,
-                Stroke = Brushes.Black,
-                StrokeThickness = 2
-            };
-            Canvas.SetLeft(circunferencia, 428);
-            Canvas.SetTop(circunferencia, 133);
-            MiCanvas.Children.Add(circunferencia);
-        }
-
         private void DrawButtonClicked(object sender, RoutedEventArgs e)
         {
             Output.Text = "";
