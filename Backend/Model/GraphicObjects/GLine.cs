@@ -19,7 +19,13 @@ public class GLine : PredFunction, IGraphicObject
         p2 = (GPoint) args[1];
         PosX = (p2.PosX + p1.PosX)/2;
         PosY = (p2.PosY + p1.PosY)/2;
-        MyGeometry = new LineGeometry(new Point(p1.PosX, p1.PosY), new Point(p2.PosX, p2.PosY));
+        double x1 = 10000;
+        double m = (p2.PosY - p1.PosY) / (p2.PosX - p1.PosX);
+        double n = p1.PosY - m * p1.PosX;
+        double y1 = m * x1 + n;
+        double x2 = -10000;
+        double y2 = m * x2 + n;
+        MyGeometry = new LineGeometry(new Point(x1, y1), new Point(x2, y2));
 
     }
 
@@ -29,12 +35,7 @@ public class GLine : PredFunction, IGraphicObject
 
     public void Draw(Canvas canvas, SolidColorBrush color)
     {
-        double x1 = 1000;
-        double m = (p2.PosY - p1.PosY) / (p2.PosX - p1.PosX);
-        double n = p1.PosY - m * p1.PosX;
-        double y1 = m * x1 + n;
-        double x2 = -1000;
-        double y2 = m * x2 + n;
+        
         Path line = new Path
         {
             Data = MyGeometry,

@@ -32,11 +32,11 @@ public class Sequence : MyExpression, IEnumerator<MyExpression>
             lastMoveNextResult = list.MoveNext();
             Current = list.Current;
         }
-        else if (start >= end)
+        else if (start > end)
             lastMoveNextResult = false;
         else
         {
-            Current = new Number((++start).ToString());
+            Current = new Number((start++).ToString());
             lastMoveNextResult = true;
         }
         return lastMoveNextResult;
@@ -61,13 +61,14 @@ public class Sequence : MyExpression, IEnumerator<MyExpression>
 
     public override string Evaluate()
     {
-        string s = "";
+       /* string s = "";
         while (MoveNext())
         {
             s += Current.Evaluate();
         }
 
-        return s;
+        return s;*/
+       return "";
     }
 
     public override string value => "sequence";

@@ -59,7 +59,8 @@ public class Token{
         PointsFigure,
         SampleCanvas,
         RandomsValuesN,
-        MeasureDecl
+        MeasureDecl,
+        PuntosSuspensivos
     }
 
     public string Value{get;}

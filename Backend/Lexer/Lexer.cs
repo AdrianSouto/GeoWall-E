@@ -158,9 +158,23 @@ internal static class Lexer{
             
             if (pointer.Current == '.')
             {
+                pointer.MoveNext();
+                if (pointer.Current == '.')
+                {
+                    pointer.MoveNext();
+                    if (pointer.Current == '.')
+                    {
+                        yield return new Token(currentToken, ClasificarToken(currentToken));
+                        yield return new Token("...", Token.TokenType.PuntosSuspensivos);
+                        currentToken = "";
+                        continue;
+                    }
+                    throw new LexicalException("..");
+                }
                 currentToken += ',';
-                continue;
+                continue; 
             }
+            
             
             currentToken += pointer.Current;
         }

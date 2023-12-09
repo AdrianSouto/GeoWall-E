@@ -6,6 +6,7 @@ using GeoWalle.Backend.Model.Expressions;
 using GeoWalle.Backend.Model.GraphicObjects;
 using GeoWalle.Backend.Model.MyExceptions;
 using GeoWalle.Backend.Model.Objects;
+using GeoWalle.Backend.Parser;
 
 namespace GeoWalle.UI
 {
@@ -17,6 +18,7 @@ namespace GeoWalle.UI
         public MainWindow()
         {
             InitializeComponent();
+            
         }
         private void DrawButtonClicked(object sender, RoutedEventArgs e)
         {
@@ -24,6 +26,7 @@ namespace GeoWalle.UI
             string s = Input.Text;
             if (!Utils.IsBalanced(s)) throw new SyntaxException("Input no balanceado");
             Draw.canvas = MiCanvas;
+            Draw.CanvasScrollViewer = CanvasScrollViewer;
             IEnumerable<Token> tokens = Lexer.GetTokens(s);
             Parser p = new Parser(tokens.GetEnumerator());
             try
@@ -48,6 +51,12 @@ namespace GeoWalle.UI
         private void CleanCanvas(object sender, RoutedEventArgs e)
         {
             MiCanvas.Children.Clear();
+        }
+
+        private void ScrollViewer_Loaded(object sender, RoutedEventArgs e)
+        {
+            CanvasScrollViewer.ScrollToHorizontalOffset(CanvasScrollViewer.ScrollableWidth/2);
+            CanvasScrollViewer.ScrollToVerticalOffset(CanvasScrollViewer.ScrollableHeight/2);
         }
     }
 }

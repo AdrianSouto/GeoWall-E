@@ -9,7 +9,7 @@ using GeoWalle.Backend.Model.Objects;
 using Hulk.Model;
 using Walle.Model.Expressions.Unary;
 
-namespace GeoWalle.Backend;
+namespace GeoWalle.Backend.Parser;
 
 public class Parser
 {
@@ -18,6 +18,7 @@ public class Parser
     {
         this.tokens = tokens;
         tokens.MoveNext();
+        Color.ChangeColor("black");
         UserFunction.CleanFunctions();
     }
 
@@ -280,6 +281,15 @@ public class Parser
             case Token.TokenType.Intersect:
                 tokens.MoveNext();
                 return new Intersect(GetParams(context));
+            case Token.TokenType.Color:
+                tokens.MoveNext();
+                Color.ChangeColor(tokens.Current.Value);
+                tokens.MoveNext();
+                return null!;
+            case Token.TokenType.Restore:
+                tokens.MoveNext();
+                Color.RestoreColor();
+                return null!;
             case Token.TokenType.OpenParenthesis:
                 tokens.MoveNext();
                 MyExpression m = ParseExpression(context);
@@ -302,6 +312,29 @@ public class Parser
 
     private MyExpression ParseSequence(Context context)
     {
+        var t = tokens;
+        int start;
+        tokens.MoveNext();
+        if (int.TryParse(tokens.Current.Value, out start))
+        {
+            tokens.MoveNext();
+            if (tokens.Current.Type == Token.TokenType.PuntosSuspensivos)
+            {
+                tokens.MoveNext();
+                if (int.TryParse(tokens.Current.Value, out int end))
+                {
+                    tokens.MoveNext();
+                    if (tokens.Current.Type != Token.TokenType.ClosedLLaves)
+                        throw new SyntaxException("Cierre las llaves de la sequencia declarada");
+                    tokens.MoveNext();
+                    return new Sequence(start, end);
+                }
+                tokens.MoveNext();
+                return new Sequence(start);
+            }
+        }
+
+        tokens = t;
         return new Sequence(GetParams(context, Token.TokenType.ClosedLLaves));
     }
 
