@@ -1,12 +1,5 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Windows;
-using System.Windows.Controls;
-
-using System.Windows.Media;
-
-using System.Windows.Shapes;
 using GeoWalle.Backend;
 using GeoWalle.Backend.Model.Context;
 using GeoWalle.Backend.Model.Expressions;
@@ -14,7 +7,7 @@ using GeoWalle.Backend.Model.GraphicObjects;
 using GeoWalle.Backend.Model.MyExceptions;
 using GeoWalle.Backend.Model.Objects;
 
-namespace GeoWalle
+namespace GeoWalle.UI
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml

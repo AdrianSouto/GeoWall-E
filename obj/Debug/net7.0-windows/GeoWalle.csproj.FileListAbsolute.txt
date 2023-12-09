@@ -4,10 +4,7 @@ D:\Trabajo\Universidad\MIO\2do Semestre\Proyectos\GeoWalle\GeoWalle\bin\Debug\ne
 D:\Trabajo\Universidad\MIO\2do Semestre\Proyectos\GeoWalle\GeoWalle\bin\Debug\net7.0-windows\GeoWalle.dll
 D:\Trabajo\Universidad\MIO\2do Semestre\Proyectos\GeoWalle\GeoWalle\bin\Debug\net7.0-windows\GeoWalle.pdb
 D:\Trabajo\Universidad\MIO\2do Semestre\Proyectos\GeoWalle\GeoWalle\obj\Debug\net7.0-windows\GeoWalle.csproj.AssemblyReference.cache
-D:\Trabajo\Universidad\MIO\2do Semestre\Proyectos\GeoWalle\GeoWalle\obj\Debug\net7.0-windows\MainWindow.g.cs
-D:\Trabajo\Universidad\MIO\2do Semestre\Proyectos\GeoWalle\GeoWalle\obj\Debug\net7.0-windows\App.g.cs
 D:\Trabajo\Universidad\MIO\2do Semestre\Proyectos\GeoWalle\GeoWalle\obj\Debug\net7.0-windows\GeoWalle_MarkupCompile.cache
-D:\Trabajo\Universidad\MIO\2do Semestre\Proyectos\GeoWalle\GeoWalle\obj\Debug\net7.0-windows\MainWindow.baml
 D:\Trabajo\Universidad\MIO\2do Semestre\Proyectos\GeoWalle\GeoWalle\obj\Debug\net7.0-windows\GeoWalle.g.resources
 D:\Trabajo\Universidad\MIO\2do Semestre\Proyectos\GeoWalle\GeoWalle\obj\Debug\net7.0-windows\GeoWalle.GeneratedMSBuildEditorConfig.editorconfig
 D:\Trabajo\Universidad\MIO\2do Semestre\Proyectos\GeoWalle\GeoWalle\obj\Debug\net7.0-windows\GeoWalle.AssemblyInfoInputs.cache
@@ -18,3 +15,6 @@ D:\Trabajo\Universidad\MIO\2do Semestre\Proyectos\GeoWalle\GeoWalle\obj\Debug\ne
 D:\Trabajo\Universidad\MIO\2do Semestre\Proyectos\GeoWalle\GeoWalle\obj\Debug\net7.0-windows\GeoWalle.pdb
 D:\Trabajo\Universidad\MIO\2do Semestre\Proyectos\GeoWalle\GeoWalle\obj\Debug\net7.0-windows\GeoWalle.genruntimeconfig.cache
 D:\Trabajo\Universidad\MIO\2do Semestre\Proyectos\GeoWalle\GeoWalle\obj\Debug\net7.0-windows\ref\GeoWalle.dll
+D:\Trabajo\Universidad\MIO\2do Semestre\Proyectos\GeoWalle\GeoWalle\obj\Debug\net7.0-windows\UI\MainWindow.baml
+D:\Trabajo\Universidad\MIO\2do Semestre\Proyectos\GeoWalle\GeoWalle\obj\Debug\net7.0-windows\UI\MainWindow.g.cs
+D:\Trabajo\Universidad\MIO\2do Semestre\Proyectos\GeoWalle\GeoWalle\obj\Debug\net7.0-windows\UI\App.g.cs
