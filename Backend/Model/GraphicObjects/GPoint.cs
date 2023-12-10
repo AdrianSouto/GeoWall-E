@@ -16,6 +16,12 @@ public class GPoint : MyExpression, IGraphicObject
         PosY = random.NextDouble() * GraphicObjects.Draw.CanvasScrollViewer.ActualHeight + GraphicObjects.Draw.CanvasScrollViewer.VerticalOffset;
         MyGeometry = new EllipseGeometry(new Point(PosX, PosY), 5, 5);
     }
+    public GPoint(Point point)
+    {
+        PosX = point.X;
+        PosY = point.Y;
+        MyGeometry = new EllipseGeometry(point, 5, 5);
+    }
 
 
     public double PosX { get; }

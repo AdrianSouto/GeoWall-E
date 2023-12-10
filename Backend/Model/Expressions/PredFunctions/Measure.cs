@@ -20,4 +20,22 @@ public class Measure : PredFunction
     {
         return Math.Sqrt(Math.Pow(p2.PosX - p1.PosX, 2) + Math.Pow(p2.PosY - p1.PosY, 2)).ToString();
     }
+
+    public static double operator +(Measure x1, double x2)
+    {
+        return double.Parse(x1.Evaluate()) + x2;
+    }
+    public static double operator -(Measure x1, double x2)
+    {
+        return double.Parse(x1.Evaluate()) - x2;
+    }
+    public static double operator *(Measure x1, double x2)
+    {
+        return double.Parse(x1.Evaluate()) * x2;
+    }
+    public static double operator /(Measure x1, double x2)
+    {
+        return double.Parse(x1.Evaluate()) / x2;
+    }
+    
 }

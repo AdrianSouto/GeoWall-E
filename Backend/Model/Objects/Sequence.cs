@@ -23,7 +23,7 @@ public class Sequence : MyExpression, IEnumerator<MyExpression>
         this.end = end;
     }
 
-    public bool MoveNext()
+    public virtual bool MoveNext()
     {
         if (!lastMoveNextResult)
             throw new InvalidOperationException("Intentó hacer MoveNext después de haber retornado false");
@@ -43,7 +43,7 @@ public class Sequence : MyExpression, IEnumerator<MyExpression>
     }
     
 
-    public MyExpression Current { get; private set; }
+    public virtual MyExpression Current { get; private set; }
 
 
     public void Reset()

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
@@ -24,7 +25,7 @@ public class GCircle : PredFunction, IGraphicObject
     public double PosX { get; }
     public double PosY { get; }
     public Geometry MyGeometry { get; }
-
+    
     public void Draw(Canvas canvas, SolidColorBrush color)
     {
         Path circunferencia = new Path

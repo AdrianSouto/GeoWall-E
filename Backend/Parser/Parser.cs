@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using GeoWalle.Backend.Model.Context;
 using GeoWalle.Backend.Model.Expressions;
@@ -13,6 +14,9 @@ namespace GeoWalle.Backend.Parser;
 
 public class Parser
 {
+    private Randoms randoms = new();
+    private Samples samples = new();
+    private Points points;
     private IEnumerator<Token> tokens;
     public Parser(IEnumerator<Token> tokens)
     {
@@ -88,7 +92,6 @@ public class Parser
                 return;
             }
             var sequence = value as Sequence;
-            sequence?.MoveNext();
             for (int i = 0; i < vars.Count; i++)
             {
                 if (context.FindVar(vars[i]) == null && vars[i] != "_"&& i < vars.Count - 1)
@@ -342,6 +345,33 @@ public class Parser
                 tokens.MoveNext();
                 Color.RestoreColor();
                 return null!;
+            case Token.TokenType.PointsFigure:
+                tokens.MoveNext();
+                if (tokens.Current.Type != Token.TokenType.OpenParenthesis)
+                    throw new SyntaxException("Missing Open Parenthesis in the points(); declaration");
+                tokens.MoveNext();
+                var par = GetParams(context);
+                if (points == null)
+                    return new Points((IGraphicObject)par[0]);
+                return points;
+            case Token.TokenType.SampleCanvas:
+                tokens.MoveNext();
+                if (tokens.Current.Type != Token.TokenType.OpenParenthesis)
+                    throw new SyntaxException("Missing Open Parenthesis in the samples(); declaration");
+                tokens.MoveNext();
+                if (tokens.Current.Type != Token.TokenType.CloseParenthesis)
+                    throw new SyntaxException("Missing Closed Parenthesis in the samples(); declaration");
+                tokens.MoveNext();
+                return samples;
+            case Token.TokenType.RandomsValuesN:
+                tokens.MoveNext();
+                if (tokens.Current.Type != Token.TokenType.OpenParenthesis)
+                    throw new SyntaxException("Missing Open Parenthesis in the randoms(); declaration");
+                tokens.MoveNext();
+                if (tokens.Current.Type != Token.TokenType.CloseParenthesis)
+                    throw new SyntaxException("Missing Closed Parenthesis in the randoms(); declaration");
+                tokens.MoveNext();
+                return randoms;
             case Token.TokenType.OpenParenthesis:
                 tokens.MoveNext();
                 MyExpression m = ParseExpression(context);
@@ -496,8 +526,8 @@ public class Parser
     }
     private List<MyExpression> GetParams(Context context, Token.TokenType tokenTypeClose = Token.TokenType.CloseParenthesis)
     {
+        //tokens.Current debe estar parado en el primer parametro despues del parentesis abierto
         List<MyExpression> paramExpressions = new List<MyExpression>();
-        //tokens.MoveNext();
         while (tokens.Current.Type != tokenTypeClose)
         {
             paramExpressions.Add(ParseExpression(context));
