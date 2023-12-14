@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using GeoWalle.Backend.Model.Context;
 using GeoWalle.Backend.Model.Expressions;
 using GeoWalle.Backend.Model.Expressions.Binary;
+using GeoWalle.Backend.Model.Expressions.GraphicObjects;
 using GeoWalle.Backend.Model.Expressions.PredFunctions;
 using GeoWalle.Backend.Model.GraphicObjects;
 using GeoWalle.Backend.Model.MyExceptions;
@@ -63,20 +64,14 @@ public class Parser
         Draw d;
         
         MyExpression objToDraw = ParseExpression(context);
-        if (objToDraw is Sequence seq)
+        string label = "";
+        if (tokens.Current.Type == Token.TokenType.Text)
         {
-            d = new Draw(seq);
-        }else
-        {
-            string label = "";
-            if (tokens.Current.Type == Token.TokenType.Text)
-            {
-                label = tokens.Current.Value;
-                tokens.MoveNext();
-            }
-
-            d = new Draw(objToDraw, label);
+            label = tokens.Current.Value;
+            tokens.MoveNext();
         }
+
+        d = new Draw(objToDraw, label);
         
         return d;
     }
@@ -91,7 +86,9 @@ public class Parser
                 context.AddVar(new Variable(vars[0], value));
                 return;
             }
+
             var sequence = value as Sequence;
+            sequence?.MoveNext();
             for (int i = 0; i < vars.Count; i++)
             {
                 if (context.FindVar(vars[i]) == null && vars[i] != "_"&& i < vars.Count - 1)
@@ -186,7 +183,11 @@ public class Parser
             tokens.MoveNext();
             MyExpression right = Concat(context);
             if(currentOp == Token.TokenType.Sum)
-                left = new Addition(left, right);
+                if (left is Sequence sleft && right is Sequence sright)
+                {
+                    left = sleft + sright;
+                }else
+                    left = new Addition(left, right);
             else 
                 left = new Subtraction(left, right);
         }
@@ -330,6 +331,12 @@ public class Parser
                     throw new SyntaxException("Missing Open Parenthesis in line declaration");
                 tokens.MoveNext();
                 return new GLine(GetParams(context));
+            case Token.TokenType.RayDecl:
+                tokens.MoveNext();
+                if (tokens.Current.Type != Token.TokenType.OpenParenthesis)
+                    throw new SyntaxException("Missing Open Parenthesis in line declaration");
+                tokens.MoveNext();
+                return new GRay(GetParams(context));
             case Token.TokenType.Intersect:
                 tokens.MoveNext();
                 if (tokens.Current.Type != Token.TokenType.OpenParenthesis)
@@ -415,8 +422,8 @@ public class Parser
                 return new Sequence(start);
             }
             parametros.Add(new Number(start.ToString()));
+            tokens.MoveNext();
         }
-        
         foreach (var x in GetParams(context, Token.TokenType.ClosedLLaves))
         {
             parametros.Add(x);
@@ -600,7 +607,7 @@ public class Parser
             if (tokens.Current.Type != Token.TokenType.Igual)
                 throw new SyntaxException("'=' expected in let-in expression");
             tokens.MoveNext();
-            MyExpression varValue = ParseExpression(context);
+            MyExpression varValue = ParseExpression(clonedContext);
             clonedContext.AddVar(new Variable(varName, varValue));
         } while (tokens.Current.Type is Token.TokenType.Comma or Token.TokenType.Semicolon && tokens.MoveNext());
 

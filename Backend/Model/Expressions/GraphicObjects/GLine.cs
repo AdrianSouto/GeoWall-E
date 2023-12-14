@@ -10,8 +10,8 @@ namespace GeoWalle.Backend.Model.GraphicObjects;
 
 public class GLine : PredFunction, IGraphicObject
 {
-    private GPoint p1;
-    private GPoint p2;
+    public GPoint p1;
+    public GPoint p2;
 
     public GLine(List<MyExpression> args) : base("line",args )
     {
@@ -25,6 +25,8 @@ public class GLine : PredFunction, IGraphicObject
         double y1 = m * x1 + n;
         double x2 = -10000;
         double y2 = m * x2 + n;
+        p1 = new GPoint(new Point(x1, y1));
+        p2 = new GPoint(new Point(x2, y2));
         MyGeometry = new LineGeometry(new Point(x1, y1), new Point(x2, y2));
 
     }
@@ -47,6 +49,7 @@ public class GLine : PredFunction, IGraphicObject
     }
 
     protected override int CantArgs => 2;
+    public string type => value;
     public override string Evaluate()
     {
         throw new System.NotImplementedException();

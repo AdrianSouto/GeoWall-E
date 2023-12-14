@@ -44,4 +44,5 @@ public class GPoint : MyExpression, IGraphicObject
     }
 
     public override string value => "point";
+    public string type => value;
 }

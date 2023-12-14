@@ -14,39 +14,16 @@ public class Draw : MyExpression
     public static Canvas canvas;
     public static ScrollViewer CanvasScrollViewer;
     private string? label;
-    private Sequence? listGObjects;
 
     public Draw(MyExpression gobject, string label = "")
     {
         this.gobject = (IGraphicObject) gobject;
         this.label = label;
     }
-    public Draw(Sequence listGObjects)
-    {
-        this.listGObjects = listGObjects;
-    }
     public override string Evaluate()
     {
-        if (listGObjects == null)
-        {
-            gobject?.Draw(canvas,Color.GetColor());
-            DrawLabel();        
-        }
-        else
-        {
-            while (listGObjects.MoveNext())
-            {
-                try
-                {
-                    ((IGraphicObject)listGObjects.Current).Draw(canvas, Color.GetColor());
-                }
-                catch (InvalidCastException e)
-                {
-                    throw new SemanticException(listGObjects.Current.value + " no se puede dibujar");
-                }
-            }
-            
-        }
+        gobject?.Draw(canvas,Color.GetColor());
+        DrawLabel();        
         
 
         return "";

@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
@@ -9,32 +8,34 @@ using GeoWalle.Backend.Model.Expressions.PredFunctions;
 
 namespace GeoWalle.Backend.Model.GraphicObjects;
 
-public class GCircle : PredFunction, IGraphicObject
+public class GSegment : PredFunction, IGraphicObject
 {
-    private readonly double radio;
+    public readonly GPoint p1;
+    public readonly GPoint p2;
 
-    public GCircle(List<MyExpression> args) : base("circle",args )
+    public GSegment(List<MyExpression> args) : base("segment",args )
     {
-        GPoint center = (GPoint) args[0];
-        radio = double.Parse(args[1].Evaluate());
-        PosX = center.PosX;
-        PosY = center.PosY;
-        MyGeometry = new EllipseGeometry(new Point(PosX,PosY), radio, radio);
+        p1 = (GPoint) args[0];
+        p2 = (GPoint) args[1];
+        PosX = (p2.PosX + p1.PosX)/2;
+        PosY = (p2.PosY + p1.PosY)/2;
+        MyGeometry = new LineGeometry(new Point(p1.PosX, p1.PosY), new Point(p2.PosX, p2.PosY));
     }
 
     public double PosX { get; }
     public double PosY { get; }
     public Geometry MyGeometry { get; }
-    
+    public string type => value;
+
     public void Draw(Canvas canvas, SolidColorBrush color)
     {
-        Path circunferencia = new Path
+        Path segment = new Path
         {
             Data = MyGeometry,
             Stroke = color,
             StrokeThickness = 2
         };
-        canvas.Children.Add(circunferencia);
+        canvas.Children.Add(segment);
     }
 
     protected override int CantArgs => 2;

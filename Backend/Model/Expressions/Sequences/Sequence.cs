@@ -1,12 +1,16 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Windows.Controls;
+using System.Windows.Media;
 using GeoWalle.Backend.Model.Expressions;
+using GeoWalle.Backend.Model.GraphicObjects;
+using GeoWalle.Backend.Model.MyExceptions;
 using Hulk.Model;
 
 namespace GeoWalle.Backend.Model.Objects;
 
-public class Sequence : MyExpression, IEnumerator<MyExpression>
+public class Sequence : MyExpression, IEnumerator<MyExpression>, IGraphicObject
 {
     private IEnumerator<MyExpression> list;
     private int start;
@@ -71,4 +75,36 @@ public class Sequence : MyExpression, IEnumerator<MyExpression>
     }
 
     public override string value => "sequence";
+    public double PosX => 0.0;
+    public double PosY => 0.0;
+    public Geometry MyGeometry { get; }
+    public void Draw(Canvas canvas, SolidColorBrush color)
+    {
+        while (MoveNext())
+        {
+            try
+            {
+                ((IGraphicObject)Current).Draw(canvas, Color.GetColor());
+            }
+            catch (InvalidCastException e)
+            {
+                throw new SemanticException(Current.value + " no se puede dibujar");
+            }
+        }
+    }
+    public static Sequence operator +(Sequence s1, Sequence s2)
+    {
+        List<MyExpression> union = new();
+        while (s1.MoveNext())
+        {
+            union.Add(s1.Current);
+        }
+        while (s2.MoveNext())
+        {
+            union.Add(s2.Current);
+        }
+
+        return new Sequence(union);
+    }
+    public string type => value;
 }

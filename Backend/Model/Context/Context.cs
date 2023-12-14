@@ -31,7 +31,7 @@ public class Context
         Context c = new Context();
         foreach (Variable v in myVars)
         {
-            if (FindVar(v.Name) == null)
+            if (c.FindVar(v.Name) == null)
             {
                 c.AddVar(v);
             }
